@@ -10,6 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      user.hasMany(models.bookClub, { foreignKey: "ownerId", as: "owner" });
+      user.belongsToMany(models.bookClub, {
+        through: "partcipants",
+        foreignKey: "userId",
+        as: "participant",
+      });
+      user.hasMany(models.comment);
     }
   }
   user.init(
