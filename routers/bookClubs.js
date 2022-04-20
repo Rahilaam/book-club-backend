@@ -29,6 +29,7 @@ router.get("/:id", async (req, res, next) => {
     const bookClub = await BookClub.findByPk(bookClubId, {
       include: [
         { model: User, as: "owner" },
+        { model: User, as: "participant" },
         Genre,
         Language,
         { model: Thread, include: [Comment] },

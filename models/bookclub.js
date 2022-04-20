@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       bookClub.belongsTo(models.user, { foreignKey: "ownerId", as: "owner" });
       bookClub.belongsToMany(models.user, {
-        through: "partcipants",
+        through: "participants",
         foreignKey: "bookClubId",
         as: "participant",
       });
