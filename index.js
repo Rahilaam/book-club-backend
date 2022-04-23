@@ -5,6 +5,8 @@ const authMiddleWare = require("./auth/middleware");
 const authRouter = require("./routers/auth");
 const { PORT } = require("./config/constants");
 const BookClubRouter = require("./routers/bookClubs");
+const GenreRouter = require("./routers/genre");
+const UserRouter = require("./routers/user");
 
 // Create an express app
 const app = express();
@@ -34,6 +36,8 @@ app.use(bodyParserMiddleWare);
 
 app.use("/auth", authRouter);
 app.use("/bookClubs", BookClubRouter);
+app.use("/genres", GenreRouter);
+app.use("/user",UserRouter);
 
 // POST endpoint which requires a token for testing purposes, can be removed
 app.post("/authorized_post_request", authMiddleWare, (req, res) => {

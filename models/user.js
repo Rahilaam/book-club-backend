@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       user.hasMany(models.bookClub, { foreignKey: "ownerId", as: "owner" });
       user.belongsToMany(models.bookClub, {
-        through: "partcipants",
+        through: "participants",
         foreignKey: "userId",
         as: "participant",
       });

@@ -2,8 +2,10 @@ const User = require("../models").user;
 const { toData } = require("./jwt");
 
 async function auth(req, res, next) {
+  console.log(req.headers)
   const auth =
     req.headers.authorization && req.headers.authorization.split(" ");
+    console.log(auth)
 
   if (!auth || !(auth[0] === "Bearer") || !auth[1]) {
     return res.status(401).send({
