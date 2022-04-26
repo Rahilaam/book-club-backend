@@ -6,6 +6,7 @@ const Language = require("../models").language;
 const Thread = require("../models").thread;
 const Comment = require("../models").comment;
 const Participant = require("../models").participant;
+
 const auth = require("../auth/middleware");
 
 const router = new Router();
@@ -39,7 +40,13 @@ router.get("/:id", async (req, res, next) => {
         { model: User, as: "participant", attributes: ["id", "name"] },
         Genre,
         Language,
-        { model: Thread, include: [Comment] },
+        {
+          model: Thread,
+          include: {
+            model: Comment,
+            include: { model: User, attributes: ["name"] },
+          },
+        },
       ],
     });
     if (!bookClub) {
@@ -89,4 +96,99 @@ router.post("/:id/join", auth, async (req, res) => {
   return res.status(201).send(participant);
 });
 
+//add a new comment
+router.post("/:id/threads/:threadId/comments", auth, async (req, res) => {
+  // console.log(req.params.id);
+  const bookClub = await BookClub.findByPk(req.params.id);
+  // console.log(space);
+
+  if (!bookClub) {
+    return res.status(404).send({ message: "This club does not exist" });
+  }
+  //const id = req.user.id
+  const thread = await Thread.findByPk(req.params.threadId);
+  if (!thread || thread.bookClubId !== bookClub.id) {
+    return res.status(404).send({ message: "This thread does not exist" });
+  }
+  const participantExist = await Participant.findOne({
+    where: { userId: req.user.id, bookClubId: req.params.id },
+  });
+
+  console.log("book club owner", bookClub.ownerId);
+  console.log("req user", req.user.id);
+
+  if (!participantExist && req.user.id !== bookClub.ownerId) {
+    return res
+      .status(400)
+      .send({ message: "You are are not a member of this club." });
+  }
+  console.log(req.user);
+  // console.log(user);
+  const { comment } = req.body;
+  const newComment = await Comment.create({
+    comment,
+    userId: req.user.id,
+    threadId: req.params.threadId,
+  });
+  const fetchComment = await Comment.findByPk(newComment.id, {
+    include: [{ model: User, attributes: ["name"] }],
+  });
+  return res.status(200).send(fetchComment);
+});
+
+//create new thread
+router.post("/:id/threads", auth, async (request, response, next) => {
+  const { topic } = request.body;
+  const bookClub = await BookClub.findByPk(req.params.id);
+  if (!bookClub) {
+    return res.status(404).send({ message: "This club does not exist" });
+  }
+  //const id = req.user.id
+  const user = await User.findByPk(request.user.id);
+  if (!user) {
+    return response.status(404).send("No user found");
+  }
+
+  if (!topic) {
+    return response.status(400).send("Give title,imageUrl and minimumBid");
+  }
+  const thread = await Thread.create({
+    topic,
+    userId: req.user.id,
+    bookClubId: req.params.id,
+  });
+
+  //   console.log(newArtWork);
+  return response.status(200).send({ ...thread.dataValues, comments: [] });
+});
+
+//posting new bookClub
+router.post("/", auth, async (request, response, next) => {
+  const {
+    apiId,
+    author,
+    genre,
+    starDate,
+    endDate,
+    title,
+    maxPeople,
+    language,
+  } = request.body;
+  const genre = await Genre.findOne({ where: { genre: genre } });
+  if (!genre) {
+    const newGenre = await Genre.create({ genre: genre });
+  }
+  //const id = req.user.id
+  const user = await User.findByPk(request.user.id);
+  if (!user) {
+    return response.status(404).send("No user found");
+  }
+
+  if (!title || !apiId) {
+    return response.status(400).send("Give title,apiId");
+  }
+
+  //   console.log(newArtWork);
+  return response.status(200).send("success");
+});
 module.exports = router;

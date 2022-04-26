@@ -1,14 +1,14 @@
 const { Router } = require("express");
-const Genre = require("../models").genre;
+const Language = require("../models").language;
 
 const router = new Router();
 
-//get all genres
+//get all languages
 router.get("/", async (req, res, next) => {
   try {
-    const genre = await Genre.findAll();
+    const language = await Language.findAll();
     // console.log(genre);
-    res.status(200).send(genre);
+    res.status(200).send(language);
   } catch (e) {
     console.log(e);
     res.status(500).send(`something went wrong`);

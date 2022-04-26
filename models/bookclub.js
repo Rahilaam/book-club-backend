@@ -24,7 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       apiId: { type: DataTypes.STRING, allowNull: false },
       title: { type: DataTypes.STRING, allowNull: false },
-      imageUrl: { type: DataTypes.STRING, allowNull: false },
+      imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue:
+          "https://previews.123rf.com/images/asfia/asfia1902/asfia190200080/117673149-3d-illustration-of-man-reading-book-sitting-near-pile-of-books-3d-human-person-character-and-white-p.jpg",
+      },
       author: { type: DataTypes.STRING, allowNull: false },
       maxPeople: { type: DataTypes.STRING, allowNull: false },
       startDate: { type: DataTypes.STRING, allowNull: false },

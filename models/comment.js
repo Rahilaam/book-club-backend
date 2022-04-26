@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   comment.init(
     {
       comment: DataTypes.STRING,
-      likes: DataTypes.INTEGER,
+      likes: { type: DataTypes.INTEGER, defaultValue: 0 },
     },
     {
       sequelize,

@@ -6,12 +6,12 @@ module.exports = {
       "languages",
       [
         {
-          language: "English",
+          language: "en",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          language: "Dutch",
+          language: "nl",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

@@ -16,11 +16,11 @@ module.exports = {
     });
 
     const language1 = await Language.findOne({
-      where: { language: "English" },
+      where: { language: "en" },
     });
 
     const language2 = await Language.findOne({
-      where: { language: "Dutch" },
+      where: { language: "nl" },
     });
 
     const user1 = await User.findOne({
@@ -41,8 +41,7 @@ module.exports = {
         {
           apiId: "MH48bnzN0LUC",
           title: "The Kite Runner",
-          imageUrl:
-            "https://books.google.com/books/content?id=MH48bnzN0LUC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+          imageUrl: "http://books.google.com/books/content?id=MH48bnzN0LUC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
           author: "Khaled Hosseini",
           genreId: genre1.id,
           languageId: language1.id,
@@ -56,8 +55,7 @@ module.exports = {
         {
           apiId: "fFCjDQAAQBAJ",
           title: "Atomic Habits",
-          imageUrl:
-            "http://books.google.com/books/content?id=fFCjDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+          imageUrl: "http://books.google.com/books/content?id=fFCjDQAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
           author: "James Clear",
           genreId: genre2.id,
           languageId: language1.id,
@@ -69,10 +67,9 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          apiId: "fFCjDQAAQBAJ",
+          apiId: "bteMDwAAQBAJ",
           title: "Elementaire gewoontes",
-          imageUrl:
-            "https://books.google.com/books/content?id=bteMDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+          imageUrl: "http://books.google.com/books/content?id=bteMDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
           author: "James Clear",
           genreId: genre2.id,
           languageId: language2.id,
@@ -86,8 +83,7 @@ module.exports = {
         {
           apiId: "3meDDwAAQBAJ",
           title: "Around the World in 80 Trains",
-          imageUrl:
-            "http://books.google.com/books/content?id=3meDDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+          imageUrl: "http://books.google.com/books/content?id=3meDDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
           author: "Monisha Rajesh",
           genreId: genre3.id,
           languageId: language1.id,
@@ -123,8 +119,8 @@ module.exports = {
           languageId: language1.id,
           maxPeople: 20,
           ownerId: user3.id,
-          startDate: new Date("2022-04-21T12:06:19.425Z"),
-          endDate: new Date("2022-04-30T12:06:19.425Z"),
+          startDate: new Date("2022-04-29T12:06:19.425Z"),
+          endDate: new Date("2022-05-20T12:06:19.425Z"),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
