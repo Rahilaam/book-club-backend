@@ -6,6 +6,7 @@ const Language = require("../models").language;
 const Thread = require("../models").thread;
 const Comment = require("../models").comment;
 const Participant = require("../models").participant;
+const validator = require("validator");
 
 const auth = require("../auth/middleware");
 
@@ -139,9 +140,14 @@ router.post("/:id/threads/:threadId/comments", auth, async (req, res) => {
 //create new thread
 router.post("/:id/threads", auth, async (request, response, next) => {
   const { topic } = request.body;
-  const bookClub = await BookClub.findByPk(req.params.id);
+  const bookClub = await BookClub.findByPk(request.params.id, {
+    include: [
+      { model: User, as: "owner" },
+      { model: User, as: "participant" },
+    ],
+  });
   if (!bookClub) {
-    return res.status(404).send({ message: "This club does not exist" });
+    return response.status(404).send({ message: "This club does not exist" });
   }
   //const id = req.user.id
   const user = await User.findByPk(request.user.id);
@@ -150,33 +156,55 @@ router.post("/:id/threads", auth, async (request, response, next) => {
   }
 
   if (!topic) {
-    return response.status(400).send("Give title,imageUrl and minimumBid");
+    return response.status(400).send("Give topic for the thread");
+  }
+  const isParticipant = await Participant.findOne({
+    where: { userId: request.user.id, bookClubId: bookClub.id },
+  });
+
+  if (!isParticipant && bookClub.ownerId !== request.user.id) {
+    return response.status(400).send("You are not a member of this club.");
   }
   const thread = await Thread.create({
     topic,
-    userId: req.user.id,
-    bookClubId: req.params.id,
+    userId: request.user.id,
+    bookClubId: request.params.id,
   });
 
   //   console.log(newArtWork);
   return response.status(200).send({ ...thread.dataValues, comments: [] });
 });
 
-//posting new bookClub
+//Creating a new bookClub
 router.post("/", auth, async (request, response, next) => {
   const {
     apiId,
     author,
     genre,
-    starDate,
+    startDate,
     endDate,
     title,
     maxPeople,
     language,
   } = request.body;
-  const genre = await Genre.findOne({ where: { genre: genre } });
-  if (!genre) {
+  const genreExist = await Genre.findOne({ where: { genre: genre } });
+  let genreId;
+  if (!genreExist) {
     const newGenre = await Genre.create({ genre: genre });
+    genreId = newGenre.id;
+  } else {
+    genreId = genreExist.id;
+  }
+
+  const languageExist = await Language.findOne({
+    where: { language: language },
+  });
+  let languageId;
+  if (!languageExist) {
+    const newLanguage = await Language.create({ language: language });
+    languageId = newLanguage.id;
+  } else {
+    languageId = languageExist.id;
   }
   //const id = req.user.id
   const user = await User.findByPk(request.user.id);
@@ -184,11 +212,29 @@ router.post("/", auth, async (request, response, next) => {
     return response.status(404).send("No user found");
   }
 
-  if (!title || !apiId) {
-    return response.status(400).send("Give title,apiId");
+  if (!title || !apiId || !startDate || !endDate || !maxPeople || !author) {
+    return response
+      .status(400)
+      .send("Give title,apiId,startDate,endDate,maxPeople,author");
   }
-
+  if (
+    !validator.isDate(new Date(startDate)) ||
+    !validator.isDate(new Date(endDate))
+  ) {
+    return response.status(400).send("Please enter valid dates");
+  }
+  const newClub = await BookClub.create({
+    title,
+    apiId,
+    genreId,
+    languageId,
+    maxPeople,
+    startDate,
+    endDate,
+    author,
+    ownerId: request.user.id,
+  });
   //   console.log(newArtWork);
-  return response.status(200).send("success");
+  return response.status(200).send(newClub);
 });
 module.exports = router;

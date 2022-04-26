@@ -27,7 +27,8 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.1",
     "sequelize": "^6.6.5",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "axios": "^0.19.2",
