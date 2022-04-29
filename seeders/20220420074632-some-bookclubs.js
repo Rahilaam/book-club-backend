@@ -75,7 +75,7 @@ module.exports = {
           languageId: language2.id,
           maxPeople: 20,
           ownerId: user1.id,
-          startDate: new Date("2022-04-10T12:06:19.425Z"),
+          startDate: new Date("2022-05-10T12:06:19.425Z"),
           endDate: new Date("2022-05-28T12:06:19.425Z"),
           createdAt: new Date(),
           updatedAt: new Date(),
